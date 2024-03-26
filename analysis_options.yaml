@@ -9,7 +9,6 @@ analyzer:
     implicit-dynamic: false
     implicit-casts: false
   errors:
-    todo: warning
     missing_return: error
     always_use_package_imports: error
     division_optimization: error
