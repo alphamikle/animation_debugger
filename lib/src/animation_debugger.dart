@@ -14,6 +14,8 @@ final BorderRadius radius = BorderRadius.circular(kSize / 4);
 const Duration _rulerMovingDuration = Duration(milliseconds: 500);
 const double _kMaxHeight = 400;
 
+typedef AppProxyBuilder = Widget Function(BuildContext context, Widget? child);
+
 enum _RulerPositionStatus {
   /// ? Bottom side
   onBottom,
@@ -48,6 +50,12 @@ class AnimationDebugger extends StatefulWidget {
     return AnimationDebugger(child: child);
   }
 
+  static AppProxyBuilder builderWrapper(AppProxyBuilder proxyBuilder) {
+    return (BuildContext context, Widget? child) {
+      return builder(context, proxyBuilder(context, child ?? const SizedBox.shrink()));
+    };
+  }
+
   final Widget child;
 
   static AnimationDebuggerState of(BuildContext context) {
@@ -68,8 +76,8 @@ class AnimationDebuggerState extends State<AnimationDebugger> with TickerProvide
   late final AnimationController _expanderController = AnimationController(vsync: this, duration: const Duration(milliseconds: 350));
   late final Animation<double> _expanderAnimation = CurvedAnimation(parent: _expanderController, curve: Curves.easeOutQuart);
 
-  Color get _foregroundColor => Theme.of(context).colorScheme.onTertiary;
-  Color get _backgroundColor => Theme.of(context).colorScheme.tertiary;
+  Color get _foregroundColor => Theme.of(context).colorScheme.onPrimary;
+  Color get _backgroundColor => Theme.of(context).colorScheme.primary;
 
   final Map<String, DebuggableAnimationController> _controllers = {};
   final Map<String, Timer?> _manualModePlayingTimers = {};
@@ -82,13 +90,13 @@ class AnimationDebuggerState extends State<AnimationDebugger> with TickerProvide
   double _rulerHeight = _kMaxHeight + kGap + kSize;
   _RulerPositionStatus _rulerStatus = _RulerPositionStatus.onBottom;
 
-  AnimationController watch(AnimationController originalController) {
+  AnimationController watch(AnimationController originalController, {String? label}) {
     if (kReleaseMode) {
       return originalController;
     }
-    final String? debugLabel = originalController.debugLabel;
+    final String? debugLabel = originalController.debugLabel ?? label;
     if (debugLabel == null || debugLabel.isEmpty) {
-      throw Exception('AnimationController does not have a debugLabel');
+      throw Exception('AnimationController does not have a debugLabel; Please, specify debugLabel field or label parameter');
     }
     if (_controllers.containsKey(debugLabel)) {
       return _controllers[debugLabel]!;

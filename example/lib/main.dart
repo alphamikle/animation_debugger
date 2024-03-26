@@ -23,6 +23,12 @@ void main() {
   runApp(const MyApp());
 }
 
+Widget yourCustomBuilder(BuildContext context, Widget? child) {
+  return SizedBox(
+    child: child,
+  );
+}
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -30,13 +36,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
-        useMaterial3: true,
+        colorSchemeSeed: Colors.blueAccent,
       ),
+      title: 'Animation Debugger',
       home: const MyHomePage(),
-      builder: AnimationDebugger.builder,
+      builder: AnimationDebugger.builderWrapper(yourCustomBuilder),
     );
   }
 }
@@ -165,13 +170,15 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
       child: Padding(
         padding: EdgeInsets.only(left: 16, top: 8, right: 16),
         child: Text(
-          'ANIMATION DEBUGGER',
+          'ANIMATION\nDEBUGGER',
           style: TextStyle(
             fontFamily: 'BlueprintFont',
             color: inkColor,
-            fontSize: 70,
+            fontSize: 40,
             letterSpacing: 5,
           ),
+          textAlign: TextAlign.right,
+          maxLines: 2,
         ),
       ),
     );
@@ -183,8 +190,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     final Size size = MediaQuery.of(context).size;
     final double width = size.width - gap * 2 - borderWidth * 2 - ballSize;
     final double height = size.height - bottomGap - gap - borderWidth * 2 - ballSize;
-
-    final double square = min(width, height) * 0.8;
 
     for (int i = 0; i < spaceObjects.length; i++) {
       final String name = spaceObjects[i];
@@ -239,7 +244,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    print('DISPOSE');
     for (final AnimationController controller in controllers) {
       controller.dispose();
     }
