@@ -46,7 +46,7 @@ linter:
     flutter_style_todos: true
     join_return_with_assignment: true
     leading_newlines_in_multiline_strings: true
-    package_api_docs: true
+#    package_api_docs: true
     prefer_asserts_in_initializer_lists: true
     prefer_constructors_over_static_methods: true
     prefer_final_in_for_each: true

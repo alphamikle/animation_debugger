@@ -77,6 +77,7 @@ class AnimationDebuggerState extends State<AnimationDebugger> with TickerProvide
   late final Animation<double> _expanderAnimation = CurvedAnimation(parent: _expanderController, curve: Curves.easeOutQuart);
 
   Color get _foregroundColor => Theme.of(context).colorScheme.onPrimary;
+
   Color get _backgroundColor => Theme.of(context).colorScheme.primary;
 
   final Map<String, DebuggableAnimationController> _controllers = {};
